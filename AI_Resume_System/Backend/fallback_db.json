@@ -1,0 +1,12 @@
+{
+  "users": [
+    {
+      "name": "Alex Morgan",
+      "email": "alex.morgan@example.com",
+      "password": "5b254e96c87f94edda3b73923a070e5ecd7cffc7ea4e8dac8e599272ee378fd6",
+      "created_at": "2026-08-09T10:54:23.259486",
+      "_id": "37b19504-5958-4d77-a067-987b5ad8c22a"
+    }
+  ],
+  "resumes": []
+}
