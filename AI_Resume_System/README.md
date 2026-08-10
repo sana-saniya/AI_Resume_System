@@ -44,14 +44,19 @@
 ### 📄 Resume Upload & Parsing
 - **Drag & Drop PDF Upload** — File validation (PDF only, max 10MB)
 - **PyMuPDF (fitz) Parsing Engine** — Intelligent text extraction from PDF documents
+- **Sample Resume Fallback** — Demo parsed resume served when no upload exists
 - **Structured Data Extraction:**
   - 👤 **Personal Info** — Name, Email, Phone (with copy buttons)
-  - 🛠 **Skills** — Matched against 120+ NLP technology dictionary
+  - 🛠 **Skills** — Matched against 130+ NLP technology dictionary (AI/ML, Web Dev, Cloud, DevOps)
   - 🎓 **Education** — Degree, Institution, CGPA, Timeline
   - 💼 **Experience** — Role, Company, Period, Responsibilities
   - 🚀 **Projects** — Title, Tech Stack, Description
   - 📜 **Certifications** — Name, Issuer, Year
   - 📝 **Raw Text Viewer** — Toggle extracted raw text
+
+### 🗄 Database
+- **MongoDB** primary storage with automatic **local JSON fallback** — runs without a DB setup
+- Resume metadata persisted per user with full parsed structure
 
 ### 🎨 UI/UX Design
 - **Glassmorphism** — Frosted glass cards with `backdrop-blur` and soft borders
@@ -85,6 +90,7 @@
 | **PyJWT** | JWT token generation & verification |
 | **MongoDB / pymongo** | NoSQL database with local JSON fallback |
 | **Pydantic** | Data validation & serialization |
+| **python-multipart** | Multipart file upload handling |
 
 ---
 
@@ -93,27 +99,28 @@
 ```
 AI_Resume_System/
 ├── Backend/
-│   ├── main.py                 # FastAPI app entry point & CORS config
+│   ├── main.py                 # FastAPI app entry point, CORS config, static file serving
 │   ├── database.py             # MongoDB + LocalJSONStore fallback
+│   ├── fallback_db.json        # Local JSON database (auto-created when MongoDB is absent)
 │   ├── routers/
-│   │   ├── auth.py             # POST /register, POST /login
-│   │   └── resume.py           # POST /upload-resume, GET /resume/me
+│   │   ├── auth.py             # POST /api/register, POST /api/login
+│   │   └── resume.py           # POST /api/upload-resume, GET /api/resume/me, GET /api/resume/{id}
 │   ├── utils/
 │   │   ├── auth_utils.py       # JWT creation, password hashing, token verification
-│   │   └── resume_parser.py    # PyMuPDF PDF parsing & NLP skill extraction
-│   └── uploads/                # Uploaded PDF storage
+│   │   └── resume_parser.py    # PyMuPDF PDF parsing & NLP skill extraction (130+ skills)
+│   └── uploads/                # Uploaded PDF storage (auto-created)
 ├── Frontend/
 │   ├── src/
-│   │   ├── components/         # Navbar, Sidebar, TopBar, GlassCard, StatCard
+│   │   ├── components/         # Navbar, Sidebar, TopBar, GlassCard, StatCard, ComingSoonCard
 │   │   ├── context/            # AuthContext (JWT state management)
 │   │   ├── layouts/            # DashboardLayout (sidebar + topbar wrapper)
 │   │   ├── pages/              # Landing, Login, Register, Dashboard, Upload, ResumeDetails, Profile
-│   │   ├── services/           # Axios API client configuration
-│   │   └── utils/              # Sample resume data for demo fallback
+│   │   ├── services/           # Axios API client (api.js)
+│   │   └── utils/              # sampleData.js — demo resume fallback
 │   ├── index.html
 │   ├── vite.config.js
 │   └── package.json
-├── START_APP.bat               # One-click launcher for both servers
+├── START_APP.bat               # One-click launcher for both servers (Windows)
 ├── .gitignore
 └── README.md
 ```
@@ -181,9 +188,12 @@ npm run dev
 | `POST` | `/api/register` | Create new user account | ❌ |
 | `POST` | `/api/login` | Authenticate & get JWT token | ❌ |
 | `POST` | `/api/upload-resume` | Upload PDF resume for parsing | ✅ JWT |
-| `GET` | `/api/resume/me` | Get latest parsed resume data | ✅ JWT |
+| `GET` | `/api/resume/me` | Get latest parsed resume (or sample fallback) | ✅ JWT |
 | `GET` | `/api/resume/{id}` | Get specific resume by ID | ✅ JWT |
-| `GET` | `/api/health` | Health check & DB status | ❌ |
+| `GET` | `/api/health` | Health check & DB connection status | ❌ |
+| `GET` | `/` | API root info & version | ❌ |
+
+> Auth routes are also available under `/api/auth/register` and `/api/auth/login` for compatibility.
 
 ---
 
@@ -201,10 +211,20 @@ PDF Upload → PyMuPDF Text Extraction → Section Block Segmentation
                               ↓               ↓               ↓
                               └───────────────┼───────────────┘
                                               ↓
-                    NLP Skill Dictionary Match (120+ technologies)
+                    NLP Skill Dictionary Match (130+ technologies)
                                               ↓
                               Structured JSON Response → Frontend UI
 ```
+
+### Skill Categories Detected
+| Category | Examples |
+|:---|:---|
+| AI / ML & Data Science | Python, PyTorch, TensorFlow, LangChain, BERT, GPT, RAG, NLP |
+| Web & Frontend | React, Next.js, Vite, TypeScript, Tailwind CSS, Framer Motion |
+| Backend & APIs | FastAPI, Flask, Django, Node.js, Express, Spring Boot, GraphQL |
+| Databases | MongoDB, PostgreSQL, MySQL, Redis, Elasticsearch, Pinecone |
+| Cloud & DevOps | AWS, Azure, Docker, Kubernetes, CI/CD, GitHub Actions, Terraform |
+| Languages | C, C++, Java, Go, Rust, PHP, SQL, R |
 
 ---
 
@@ -215,6 +235,7 @@ PDF Upload → PyMuPDF Text Extraction → Section Block Segmentation
 | ✅ User Registration & JWT Login | **Review 1** — Complete |
 | ✅ Resume Upload & PDF Parsing | **Review 1** — Complete |
 | ✅ Structured Resume Details Display | **Review 1** — Complete |
+| ✅ MongoDB + JSON Fallback Storage | **Review 1** — Complete |
 | 🔒 AI Job Recommendation Engine | Review 2 — Upcoming |
 | 🔒 Skill Gap Analysis & Learning Paths | Review 2 — Upcoming |
 | 🔒 AI Interview Preparation | Review 3 — Upcoming |
@@ -241,5 +262,7 @@ This project is developed as part of the **Final Year B.Tech Capstone Project** 
 <div align="center">
 
 **Built with ❤️ using React, FastAPI, PyMuPDF & Tailwind CSS**
+
+*Last updated: August 2026 — Review 1 Submission*
 
 </div>
